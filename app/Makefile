@@ -8,6 +8,7 @@ DOCKER_PUSH_APP_VERSION?=0.0.1
 DOCKER_PUSH_AWS_ACCOUNT?=920609328416
 DOCKER_PUSH_AWS_REGION?=eu-west-1
 
+DOCKER_BUILD_PLATFORM?=
 DOCKER_BUILD_TARGET?=production
 DOCKER_BUILD_TAG?=$(SERVICE_NAME)-$(DOCKER_BUILD_TARGET)
 
@@ -16,6 +17,10 @@ export PATH
 
 export BUILDKIT_PROGRESS=plain
 export DOCKER_BUILDKIT=1
+
+ifneq ($(DOCKER_BUILD_PLATFORM),)
+export DOCKER_DEFAULT_PLATFORM=${DOCKER_BUILD_PLATFORM}
+endif
 
 SHELL:=env PATH=$(PATH) /bin/bash
 
@@ -40,9 +45,10 @@ docker_build:
 
 .PHONY: docker_push_aws
 docker_push_aws:
+	$(MAKE) docker_build DOCKER_BUILD_PLATFORM=linux/amd64 DOCKER_BUILD_TAG=${DOCKER_BUILD_TAG}-aws
 	aws ecr get-login-password --region ${DOCKER_PUSH_AWS_REGION} | \
 		docker login --username AWS --password-stdin ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com
-	docker tag $(shell docker images -q  ${DOCKER_BUILD_TAG}) ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${DOCKER_PUSH_APP_VERSION}
+	docker tag $(shell docker images -q  '${DOCKER_BUILD_TAG}-aws') ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${DOCKER_PUSH_APP_VERSION}
 	docker push ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${DOCKER_PUSH_APP_VERSION}
 
 .PHONY: docker_run

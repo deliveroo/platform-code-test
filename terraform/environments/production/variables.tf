@@ -10,7 +10,7 @@ variable "app-name" {
 
 variable "app-image" {
   type    = string
-  default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
+  default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.3"
 }
 
 variable "region" {

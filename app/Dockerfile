@@ -1,6 +1,3 @@
-FROM deliveroo/hopper-runner:1.9.8 as hopper-runner
-
-
 FROM golang:1.19-alpine as builder
 
 ARG DIR=${GOPATH}/src/deliveroo/hopper-tutorial-dreed
@@ -14,9 +11,7 @@ FROM alpine:3.16 as production
 
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app /app
-COPY --from=hopper-runner /hopper-runner /usr/bin/hopper-runner
 
-ENTRYPOINT ["hopper-runner", "--server", "9999", "--"]
 CMD ["/app"]
 
 

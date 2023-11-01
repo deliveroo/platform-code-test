@@ -62,6 +62,15 @@ resource "aws_iam_role_policy_attachment" "hopper_task_policy_attachment" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "test_app" {
+  name              = "/aws/ecs/${var.app-name}"
+  retention_in_days = 3
+
+  tags = {
+    Name = var.app-name
+  }
+}
+
 resource "aws_security_group" "test_app" {
   name        = var.app-name
   description = "Allow traffic for ${var.app-name}"
@@ -81,13 +90,23 @@ resource "aws_security_group" "test_app" {
 }
 
 resource "aws_ecs_task_definition" "test_app" {
+
   container_definitions = jsonencode([
     {
+      command   = ["/app"]
       name      = "app"
       image     = var.app-image
       cpu       = 256
       memory    = 512
       essential = true
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group = "${aws_cloudwatch_log_group.test_app.name}"
+          awslogs-region = data.aws_region.current.id
+          awslogs-stream-prefix = "ecs"
+        }
+      }
       portMappings = [
         {
           containerPort = 8080
