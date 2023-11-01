@@ -8,60 +8,6 @@ resource "aws_ecr_repository" "app" {
   }
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
-  statement {
-    actions = [
-      "sts:AssumeRole",
-    ]
-
-    principals {
-      type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "task_role" {
-  name                  = var.app-name
-  assume_role_policy    = data.aws_iam_policy_document.assume_role_policy.json
-  force_detach_policies = true
-}
-
-resource "aws_iam_role_policy_attachment" "task_role_execution_policy_attachment" {
-  role       = aws_iam_role.task_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
-
-data "aws_iam_policy_document" "task_role_policy_document" {
-  statement {
-    actions = [
-      "ssm:GetParameters",
-    ]
-
-    resources = [
-      "arn:aws:ssm:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:parameter/appsecrets/${var.app-name}/*",
-    ]
-  }
-}
-
-resource "aws_iam_policy" "task_role_policy" {
-  description = "Access for ${var.app-name}"
-  policy      = data.aws_iam_policy_document.task_role_policy_document.json
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "hopper_task_policy_attachment" {
-  role       = aws_iam_role.task_role.name
-  policy_arn = aws_iam_policy.task_role_policy.arn
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 resource "aws_cloudwatch_log_group" "test_app" {
   name              = "/aws/ecs/${var.app-name}"
   retention_in_days = 3
@@ -102,8 +48,8 @@ resource "aws_ecs_task_definition" "test_app" {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group = "${aws_cloudwatch_log_group.test_app.name}"
-          awslogs-region = data.aws_region.current.id
+          awslogs-group         = "${aws_cloudwatch_log_group.test_app.name}"
+          awslogs-region        = data.aws_region.current.id
           awslogs-stream-prefix = "ecs"
         }
       }

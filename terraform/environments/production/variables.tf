@@ -13,6 +13,11 @@ variable "app-image" {
   default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.3"
 }
 
+variable "dns_public_domain" {
+  type    = string
+  default = "roo-coding-test.co.uk"
+}
+
 variable "region" {
   type    = string
   default = "eu-west-1"
