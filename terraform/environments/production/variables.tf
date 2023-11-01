@@ -1,6 +1,16 @@
+data "aws_caller_identity" "current" {}
+
+data "aws_region" "current" {}
+
+
 variable "app-name" {
   type    = string
   default = "platform-code-test-app"
+}
+
+variable "app-image" {
+  type    = string
+  default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
 }
 
 variable "region" {

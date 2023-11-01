@@ -6,6 +6,9 @@ SHELL:= env PATH=$(PATH) /bin/bash
 tf-apply: tf-init
 	cd terraform/environments/production && terraform apply -auto-approve
 
+tf-destroy:
+	cd terraform/environments/production && terraform destroy
+
 tf-fmt:
 	cd terraform/environments/production && terraform fmt -recursive
 
