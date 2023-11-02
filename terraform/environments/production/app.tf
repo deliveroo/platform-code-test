@@ -1,13 +1,3 @@
-resource "aws_ecr_repository" "app" {
-  force_delete         = true
-  image_tag_mutability = "IMMUTABLE"
-  name                 = var.app-name
-
-  image_scanning_configuration {
-    scan_on_push = true
-  }
-}
-
 resource "aws_cloudwatch_log_group" "test_app" {
   name              = "/aws/ecs/${var.app-name}"
   retention_in_days = 3
@@ -21,6 +11,14 @@ resource "aws_security_group" "test_app" {
   name        = var.app-name
   description = "Allow traffic for ${var.app-name}"
   vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port        = 8080
+    to_port          = 8080
+    protocol         = "tcp"
+    cidr_blocks      = [var.vpc-cidr]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 
   egress {
     from_port        = 0
@@ -74,16 +72,23 @@ resource "aws_ecs_task_definition" "test_app" {
 }
 
 resource "aws_ecs_service" "test_app" {
-  cluster       = aws_ecs_cluster.apps.id
-  desired_count = 1
-  launch_type   = "FARGATE"
-  name          = var.app-name
-  network_configuration {
-    security_groups = [aws_security_group.test_app.id]
-    subnets         = [aws_subnet.subnet_apps_a.id]
-  }
+  cluster         = aws_ecs_cluster.apps.id
+  desired_count   = 1
+  launch_type     = "FARGATE"
+  name            = var.app-name
   task_definition = aws_ecs_task_definition.test_app.arn
   tags = {
     Name = var.app-name
+  }
+
+  load_balancer {
+    container_name   = "app"
+    container_port   = 8080
+    target_group_arn = aws_lb_target_group.test_app_public.arn
+  }
+
+  network_configuration {
+    security_groups = [aws_security_group.test_app.id]
+    subnets         = [aws_subnet.subnet_apps_a.id]
   }
 }

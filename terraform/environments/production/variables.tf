@@ -10,7 +10,7 @@ variable "app-name" {
 
 variable "app-image" {
   type    = string
-  default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.3"
+  default = "920609328416.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
 }
 
 variable "dns_public_domain" {
@@ -36,6 +36,16 @@ variable "subnet-cidr-dbs-a" {
 variable "subnet-cidr-public-a" {
   type    = string
   default = "10.0.192.0/20"
+}
+
+variable "subnet-cidr-public-b" {
+  type    = string
+  default = "10.0.208.0/20"
+}
+
+variable "subnet-cidr-public-c" {
+  type    = string
+  default = "10.0.224.0/20"
 }
 
 variable "vpc-cidr" {
