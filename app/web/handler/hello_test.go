@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/deliveroo/hopper-tutorial-dreed/web"
-	"github.com/deliveroo/hopper-tutorial-dreed/web/handler"
+	"github.com/deliveroo/platform-code-test/web"
+	"github.com/deliveroo/platform-code-test/web/handler"
 
 	"github.com/stretchr/testify/assert"
 )

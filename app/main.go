@@ -8,8 +8,8 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/deliveroo/hopper-tutorial-dreed/config"
-	"github.com/deliveroo/hopper-tutorial-dreed/web"
+	"github.com/deliveroo/platform-code-test/config"
+	"github.com/deliveroo/platform-code-test/web"
 )
 
 func main() {

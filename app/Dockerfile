@@ -1,6 +1,6 @@
 FROM golang:1.19-alpine as builder
 
-ARG DIR=${GOPATH}/src/deliveroo/hopper-tutorial-dreed
+ARG DIR=${GOPATH}/src/deliveroo/platform-code-test
 RUN mkdir -p ${DIR}
 ADD . ${DIR}
 WORKDIR ${DIR}

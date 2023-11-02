@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/deliveroo/hopper-tutorial-dreed/config"
-	"github.com/deliveroo/hopper-tutorial-dreed/logging"
-	"github.com/deliveroo/hopper-tutorial-dreed/web/handler"
+	"github.com/deliveroo/platform-code-test/config"
+	"github.com/deliveroo/platform-code-test/logging"
+	"github.com/deliveroo/platform-code-test/web/handler"
 
 	"github.com/rs/zerolog/log"
 

@@ -1,4 +1,4 @@
-module github.com/deliveroo/hopper-tutorial-dreed
+module github.com/deliveroo/platform-code-test
 
 go 1.19
 
