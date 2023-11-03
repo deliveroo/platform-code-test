@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/deliveroo/platform-code-test/config"
-	"github.com/deliveroo/platform-code-test/logging"
-	"github.com/deliveroo/platform-code-test/web/handler"
+	"github.com/deliveroo/platform-code-test-app/config"
+	"github.com/deliveroo/platform-code-test-app/logging"
+	"github.com/deliveroo/platform-code-test-app/web/handler"
 
 	"github.com/rs/zerolog/log"
 
@@ -25,16 +25,19 @@ type WebProvider interface {
 
 type web struct {
 	Config             config.Config
+	ConnectedHandler   *handler.ConnectHandler
 	HealthcheckHandler *handler.HealthcheckHandler
 	HelloHandler       *handler.HelloHandler
 }
 
 func NewWeb(cfg config.Config) WebProvider {
+	connectHandler := handler.NewConnectHandler(HtmlTmpls, cfg)
 	healthcheckHandler := handler.NewHealthcheckHandler()
 	helloHandler := handler.NewHelloHandler(HtmlTmpls)
 
 	web := web{
 		Config:             cfg,
+		ConnectedHandler:   connectHandler,
 		HealthcheckHandler: healthcheckHandler,
 		HelloHandler:       helloHandler,
 	}
@@ -77,7 +80,9 @@ func (w web) Run(ctx context.Context) {
 
 func (w web) SetupRouter(ctx context.Context) *http.ServeMux {
 	router := http.NewServeMux()
+
 	router.HandleFunc("/", w.HelloHandler.Http)
+	router.HandleFunc("/connect", w.ConnectedHandler.Http)
 	router.HandleFunc("/healthcheck", w.HealthcheckHandler.Http)
 
 	return router

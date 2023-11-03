@@ -16,7 +16,7 @@ resource "aws_security_group" "test_app" {
     from_port        = 8080
     to_port          = 8080
     protocol         = "tcp"
-    cidr_blocks      = [var.vpc-cidr]
+    cidr_blocks      = ["10.1.0.0/16"]
     ipv6_cidr_blocks = ["::/0"]
   }
 

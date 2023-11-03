@@ -56,6 +56,7 @@ docker_run: docker_build
 	docker run \
 		-dit \
 		-p 8080:8080 \
+		--env-file .env \
 		$(DOCKER_BUILD_TAG)
 
 .PHONY: docker_test

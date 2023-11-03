@@ -1,4 +1,4 @@
-module github.com/deliveroo/platform-code-test
+module github.com/deliveroo/platform-code-test-app
 
 go 1.19
 
@@ -19,6 +19,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
