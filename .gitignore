@@ -1,2 +1,5 @@
 .creds
 .terraform
+terraform.tfstate*
+*.log
+.env

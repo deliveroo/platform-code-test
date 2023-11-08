@@ -11,7 +11,7 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "roo-platform-code-test"
-    key    = "envs/production/terraform.tfstate"
+    key    = "envs/common/terraform.tfstate"
     region = "eu-west-1"
   }
 }
