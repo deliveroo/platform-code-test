@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+main () {
+    USERNAME="${1-}"
+    PASSWORD="$( pwgen -1 -s 32 )"
+    GROUPNAME="Candidates"
+
+
+    if [ -z "$USERNAME" ]; then
+        echo "Please supply a username as the first parameter"
+        exit 1
+    fi
+
+    if ! command -v aws &> /dev/null; then
+        printf "AWS CLI is not installed, please install via 'brew install awscli'"
+        exit 1
+    fi
+
+    if ! command -v jq &> /dev/null; then
+        printf "JQ is not installed, please install via 'brew install jq'"
+        exit 1
+    fi
+
+    if ! command -v pwgen &> /dev/null; then
+        printf "pwgen is not installed, please install via 'brew install pwgen'"
+        exit 1
+    fi
+
+    printf "Creating user %s\n" "${USERNAME}"
+    aws iam create-user \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+
+    printf "Setting password\n"
+    aws iam create-login-profile \
+        --user-name "${USERNAME}" \
+        --password "${PASSWORD}" \
+        --no-password-reset-required 2>&1 > /dev/null
+
+    printf "Adding user to %s group\n" "${GROUPNAME}"
+    aws iam add-user-to-group \
+        --group-name "${GROUPNAME}" \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+
+    printf "Generating CLI creds\n"
+    CREDS_OUTPUT="$( aws iam create-access-key \
+        --user-name "${USERNAME}" )"
+
+    ACCESSKEY="$( echo "$CREDS_OUTPUT" | jq -r '.AccessKey.AccessKeyId')"
+    SECRETKEY="$( echo "$CREDS_OUTPUT" | jq -r '.AccessKey.SecretAccessKey')"
+
+    cat << EOF
+User created
+
+Console Login ->
+
+Username: ${USERNAME}
+Password ${PASSWORD}
+
+
+CLI Details ->
+
+Access Key ID: ${ACCESSKEY}
+Secret Access Key: ${SECRETKEY}
+EOF
+}
+
+main "$@"

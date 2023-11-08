@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+main () {
+    USERNAME="${1-}"
+    GROUPNAME="Candidates"
+
+    if [ -z "$USERNAME" ]; then
+        echo "Please supply a username as the first parameter"
+        exit 1
+    fi
+
+    if ! command -v aws &> /dev/null; then
+        printf "AWS CLI is not installed, please install via 'brew install awscli'"
+        exit 1
+    fi
+
+    if ! command -v jq &> /dev/null; then
+        printf "JQ is not installed, please install via 'brew install jq'"
+        exit 1
+    fi
+
+    KEYS="$( aws iam list-access-keys \
+            --user-name "${USERNAME}" \
+            --max-items 1 )"
+    ACCESSKEY="$( echo "${KEYS}" | jq -r '.AccessKeyMetadata[0].AccessKeyId' )"
+
+    printf "Removing access key\n"
+    aws iam delete-access-key \
+        --access-key-id "${ACCESSKEY}" \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+
+    printf "Removing login profile\n"
+    aws iam delete-login-profile \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+
+    printf "Removing from %s group\n" "${GROUPNAME}"
+    aws iam  remove-user-from-group \
+        --group-name "${GROUPNAME}" \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+
+    printf "Removing user\n"
+    aws iam delete-user \
+        --user-name "${USERNAME}" 2>&1 > /dev/null
+}
+
+main "$@"
