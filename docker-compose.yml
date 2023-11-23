@@ -1,0 +1,14 @@
+services:
+  workspace:
+    image: scratch
+    volumes:
+      - "${PWD}:${PWD}"
+    working_dir: "${PWD}"
+    env_file:
+      - .env
+
+  terraform:
+    extends:
+      service: workspace
+    image: hashicorp/terraform:${TERRAFORM_VERSION}
+    entrypoint: terraform
