@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 variable "app_name" {
   type    = string
   default = "platform-code-test-app"

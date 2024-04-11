@@ -40,14 +40,20 @@ Before an interview (at least half an hour before) the following actions should 
 * Setup CLI creds
 * Apply production infra - ```make tf-apply```
 * Create a user for the candidate - ```make user-generate USERNAME=[USER.NAME]```
+* For EKS interviews only, check that the cluster is configured correctly for the candidate:
+    * Run `make eks-config` to generate a Kubeconfig
+    * Run `kubectl get po -A` - all pods should be running, healthy, and not restarting.
 
 ### How to Tear Down Post-Interview
 
 Post interview everything should be taken down:
 
+* **IMPORTANT** for Kubernetes interviews only, run this **before** destroying Terraform:
+    * run `make eks-config`
+    * run `kubectl delete ingress platform-code-test-app -n default`
 * Destroy like so - ```make tf-destroy```
 * Remove candidate user - ```make user-delete USERNAME=[USER.NAME]```
-*
+
 ### Makefile
 
 A simple [Makefile](Makefile) is provided for running some common commands:
