@@ -24,7 +24,7 @@ variable "app_name" {
 
 variable "app_image" {
   type    = string
-  default = "569418866894.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
+  default = "569418866894.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.2"
 }
 
 variable "dns_public_domain" {

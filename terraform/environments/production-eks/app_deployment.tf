@@ -1,11 +1,13 @@
 resource "kubernetes_deployment" "app" {
+  depends_on = [
+    aws_eks_fargate_profile.apps_default,
+  ]
+
   metadata {
     name = var.app_name
   }
 
   spec {
-    replicas = 3
-
     selector {
       match_labels = {
         app = var.app_name

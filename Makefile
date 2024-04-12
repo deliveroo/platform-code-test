@@ -2,7 +2,7 @@ PATH:= $(PATH):$(GOBIN)
 export PATH
 SHELL:= env PATH=$(PATH) /bin/bash
 
-INTERVIEW_TYPE ?= $(shell grep -vm1 '^\#' INTERVIEW_TYPE )
+INTERVIEW_TYPE ?= $(shell grep -v '^\#' INTERVIEW_TYPE | awk '{print $$1}' | grep -v '^$$' | head -n 1)
 ENV?=production-$(INTERVIEW_TYPE)
 INTERVIEWER?=0
 USERNAME?=

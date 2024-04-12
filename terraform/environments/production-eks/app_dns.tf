@@ -1,11 +1,10 @@
 resource "aws_route53_record" "test_app_public" {
   name    = "${var.app_name}.${var.dns_public_domain}"
-  type    = "A"
+  type    = "CNAME"
   zone_id = data.aws_route53_zone.main_public.zone_id
+  ttl     = 60
 
-  alias {
-    evaluate_target_health = true
-    name                   = aws_lb.test_app_public.dns_name
-    zone_id                = aws_lb.test_app_public.zone_id
-  }
+  records = [
+    kubernetes_ingress_v1.test_app_public.status.0.load_balancer.0.ingress.0.hostname
+  ]
 }

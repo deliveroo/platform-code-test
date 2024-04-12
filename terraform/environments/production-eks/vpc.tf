@@ -103,7 +103,8 @@ resource "aws_subnet" "subnet_public_a" {
   availability_zone = "${var.region}a"
 
   tags = {
-    Name = "main-public-a"
+    Name                     = "main-public-a"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -113,7 +114,8 @@ resource "aws_subnet" "subnet_public_b" {
   availability_zone = "${var.region}b"
 
   tags = {
-    Name = "main-public-b"
+    Name                     = "main-public-b"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -123,7 +125,8 @@ resource "aws_subnet" "subnet_public_c" {
   availability_zone = "${var.region}c"
 
   tags = {
-    Name = "main-public-c"
+    Name                     = "main-public-c"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
