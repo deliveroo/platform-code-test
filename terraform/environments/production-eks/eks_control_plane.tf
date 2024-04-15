@@ -9,9 +9,9 @@ resource "aws_eks_cluster" "apps" {
 
   vpc_config {
     subnet_ids = [
-      aws_subnet.subnet_public_a.id,
-      aws_subnet.subnet_public_b.id,
-      aws_subnet.subnet_public_c.id,
+      aws_subnet.subnet_apps_a.id,
+      aws_subnet.subnet_apps_b.id,
+      aws_subnet.subnet_apps_c.id,
     ]
     public_access_cidrs     = ["0.0.0.0/0"]
     endpoint_public_access  = true

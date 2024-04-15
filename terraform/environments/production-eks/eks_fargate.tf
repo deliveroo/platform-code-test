@@ -4,6 +4,8 @@ resource "aws_eks_fargate_profile" "apps_default" {
   pod_execution_role_arn = aws_iam_role.fargate_execution_role.arn
   subnet_ids = [
     aws_subnet.subnet_apps_a.id,
+    aws_subnet.subnet_apps_b.id,
+    aws_subnet.subnet_apps_c.id,
   ]
 
   selector {

@@ -27,6 +27,26 @@ resource "aws_subnet" "subnet_apps_a" {
   }
 }
 
+resource "aws_subnet" "subnet_apps_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_apps_b
+  availability_zone = "${var.region}b"
+
+  tags = {
+    Name = "main-apps-b"
+  }
+}
+
+resource "aws_subnet" "subnet_apps_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_apps_c
+  availability_zone = "${var.region}c"
+
+  tags = {
+    Name = "main-apps-c"
+  }
+}
+
 resource "aws_route_table" "subnet_route_table_apps" {
   vpc_id = aws_vpc.main.id
 
@@ -37,6 +57,16 @@ resource "aws_route_table" "subnet_route_table_apps" {
 
 resource "aws_route_table_association" "subnet_apps_a_association" {
   subnet_id      = aws_subnet.subnet_apps_a.id
+  route_table_id = aws_route_table.subnet_route_table_apps.id
+}
+
+resource "aws_route_table_association" "subnet_apps_b_association" {
+  subnet_id      = aws_subnet.subnet_apps_b.id
+  route_table_id = aws_route_table.subnet_route_table_apps.id
+}
+
+resource "aws_route_table_association" "subnet_apps_c_association" {
+  subnet_id      = aws_subnet.subnet_apps_c.id
   route_table_id = aws_route_table.subnet_route_table_apps.id
 }
 
@@ -96,7 +126,6 @@ resource "aws_route_table_association" "subnet_dbs_c_association" {
 }
 
 # Public subnets
-
 resource "aws_subnet" "subnet_public_a" {
   vpc_id            = aws_vpc.main.id
   cidr_block        = var.subnet_cidr_public_a
@@ -104,28 +133,6 @@ resource "aws_subnet" "subnet_public_a" {
 
   tags = {
     Name                     = "main-public-a"
-    "kubernetes.io/role/elb" = "1"
-  }
-}
-
-resource "aws_subnet" "subnet_public_b" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.subnet_cidr_public_b
-  availability_zone = "${var.region}b"
-
-  tags = {
-    Name                     = "main-public-b"
-    "kubernetes.io/role/elb" = "1"
-  }
-}
-
-resource "aws_subnet" "subnet_public_c" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = var.subnet_cidr_public_c
-  availability_zone = "${var.region}c"
-
-  tags = {
-    Name                     = "main-public-c"
     "kubernetes.io/role/elb" = "1"
   }
 }
@@ -140,15 +147,6 @@ resource "aws_route_table" "subnet_route_table_public" {
 
 resource "aws_route_table_association" "subnet_public_a_association" {
   subnet_id      = aws_subnet.subnet_public_a.id
-  route_table_id = aws_route_table.subnet_route_table_public.id
-}
-
-resource "aws_route_table_association" "subnet_public_b_association" {
-  subnet_id      = aws_subnet.subnet_public_b.id
-  route_table_id = aws_route_table.subnet_route_table_public.id
-}
-resource "aws_route_table_association" "subnet_public_c_association" {
-  subnet_id      = aws_subnet.subnet_public_c.id
   route_table_id = aws_route_table.subnet_route_table_public.id
 }
 
@@ -308,6 +306,16 @@ resource "aws_network_acl_association" "subnet_apps_a_association" {
   subnet_id      = aws_subnet.subnet_apps_a.id
 }
 
+resource "aws_network_acl_association" "subnet_apps_b_association" {
+  network_acl_id = aws_network_acl.private.id
+  subnet_id      = aws_subnet.subnet_apps_b.id
+}
+
+resource "aws_network_acl_association" "subnet_apps_c_association" {
+  network_acl_id = aws_network_acl.private.id
+  subnet_id      = aws_subnet.subnet_apps_c.id
+}
+
 resource "aws_network_acl_association" "subnet_dbs_a_association" {
   network_acl_id = aws_network_acl.private.id
   subnet_id      = aws_subnet.subnet_dbs_a.id
@@ -323,18 +331,7 @@ resource "aws_network_acl_association" "subnet_dbs_c_association" {
   subnet_id      = aws_subnet.subnet_dbs_c.id
 }
 
-
 resource "aws_network_acl_association" "subnet_public_a_association" {
   network_acl_id = aws_network_acl.public.id
   subnet_id      = aws_subnet.subnet_public_a.id
-}
-
-resource "aws_network_acl_association" "subnet_public_b_association" {
-  network_acl_id = aws_network_acl.public.id
-  subnet_id      = aws_subnet.subnet_public_b.id
-}
-
-resource "aws_network_acl_association" "subnet_public_c_association" {
-  network_acl_id = aws_network_acl.public.id
-  subnet_id      = aws_subnet.subnet_public_c.id
 }
