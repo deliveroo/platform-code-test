@@ -26,6 +26,33 @@ resource "kubernetes_deployment" "app" {
           image = var.app_image
           name  = "app"
 
+          env {
+            name  = "DB_HOST"
+            value = aws_rds_cluster.test_app.endpoint
+          }
+
+          env {
+            name = "DB_USER"
+            value_from {
+              secret_key_ref {
+                name     = "db-credentials"
+                key      = "db_user"
+                optional = false
+              }
+            }
+          }
+
+          env {
+            name = "DB_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name     = "db-credentials"
+                key      = "db_password"
+                optional = false
+              }
+            }
+          }
+
           resources {
             limits = {
               cpu    = "0.5"

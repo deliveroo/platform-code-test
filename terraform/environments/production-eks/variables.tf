@@ -77,6 +77,11 @@ variable "subnet_cidr_public_b" {
   default = "10.0.208.0/20"
 }
 
+variable "subnet_cidr_public_c" {
+  type    = string
+  default = "10.0.224.0/20"
+}
+
 variable "vpc_cidr" {
   type    = string
   default = "10.0.0.0/16"

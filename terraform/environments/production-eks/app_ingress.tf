@@ -29,7 +29,7 @@ resource "aws_security_group" "test_app_alb_public" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = ["10.2.0.0/16"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   tags = {

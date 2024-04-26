@@ -148,6 +148,17 @@ resource "aws_subnet" "subnet_public_b" {
   }
 }
 
+resource "aws_subnet" "subnet_public_c" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_public_c
+  availability_zone = "${var.region}c"
+
+  tags = {
+    Name                     = "main-public-c"
+    "kubernetes.io/role/elb" = "1"
+  }
+}
+
 resource "aws_route_table" "subnet_route_table_public" {
   vpc_id = aws_vpc.main.id
 
