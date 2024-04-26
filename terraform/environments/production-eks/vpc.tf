@@ -137,6 +137,17 @@ resource "aws_subnet" "subnet_public_a" {
   }
 }
 
+resource "aws_subnet" "subnet_public_b" {
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.subnet_cidr_public_b
+  availability_zone = "${var.region}b"
+
+  tags = {
+    Name                     = "main-public-b"
+    "kubernetes.io/role/elb" = "1"
+  }
+}
+
 resource "aws_route_table" "subnet_route_table_public" {
   vpc_id = aws_vpc.main.id
 
@@ -147,6 +158,11 @@ resource "aws_route_table" "subnet_route_table_public" {
 
 resource "aws_route_table_association" "subnet_public_a_association" {
   subnet_id      = aws_subnet.subnet_public_a.id
+  route_table_id = aws_route_table.subnet_route_table_public.id
+}
+
+resource "aws_route_table_association" "subnet_public_b_association" {
+  subnet_id      = aws_subnet.subnet_public_b.id
   route_table_id = aws_route_table.subnet_route_table_public.id
 }
 
@@ -261,6 +277,15 @@ resource "aws_network_acl" "private" {
   }
 
   egress {
+    protocol   = "-1"
+    rule_no    = 800
+    action     = "allow"
+    cidr_block = var.vpc_cidr
+    from_port  = 0
+    to_port    = 0
+  }
+
+  egress {
     protocol   = "tcp"
     rule_no    = 900
     action     = "allow"
@@ -285,6 +310,15 @@ resource "aws_network_acl" "private" {
     cidr_block = "0.0.0.0/0"
     from_port  = 80
     to_port    = 80
+  }
+
+  ingress {
+    protocol   = "-1"
+    rule_no    = 800
+    action     = "allow"
+    cidr_block = var.vpc_cidr
+    from_port  = 0
+    to_port    = 0
   }
 
   ingress {
@@ -334,4 +368,9 @@ resource "aws_network_acl_association" "subnet_dbs_c_association" {
 resource "aws_network_acl_association" "subnet_public_a_association" {
   network_acl_id = aws_network_acl.public.id
   subnet_id      = aws_subnet.subnet_public_a.id
+}
+
+resource "aws_network_acl_association" "subnet_public_b_association" {
+  network_acl_id = aws_network_acl.public.id
+  subnet_id      = aws_subnet.subnet_public_b.id
 }
