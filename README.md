@@ -38,6 +38,7 @@ Before an interview (at least half an hour before) the following actions should 
 
 * Clone this repo
 * Setup CLI creds
+* Update the [INTERVIEW_TYPE](./INTERVIEW_TYPE) file to reflect the flavour of interview (ECS or EKS), by removing the comment on the relevant line
 * Apply production infra - ```make tf-apply```
 * Create a user for the candidate - ```make user-generate USERNAME=[USER.NAME]```
 * For EKS interviews only, check that the cluster is configured correctly for the candidate:
@@ -48,6 +49,7 @@ Before an interview (at least half an hour before) the following actions should 
 
 Post interview everything should be taken down:
 
+* Update the [INTERVIEW_TYPE](./INTERVIEW_TYPE) file to reflect the flavour of interview (ECS or EKS), by removing the comment on the relevant line
 * **IMPORTANT** for Kubernetes interviews only, run this **before** destroying Terraform:
     * run `make eks-config`
     * run `kubectl delete ingress platform-code-test-app -n default`
