@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+main () {
+    local INTERVIEW_TYPE
+
+    INTERVIEW_TYPE="${1-}"
+
+    if [ -z "${INTERVIEW_TYPE}" ]; then
+        echo "Please supply a interview type as the first parameter"
+        exit 1
+    fi
+
+    if [ "${INTERVIEW_TYPE}" != "eks" ]; then
+        echo "Nothing extra to destroy for ${INTERVIEW_TYPE}"
+        exit 0
+    fi
+
+
+    set +e
+    make eks-config
+    kubectl delete ingress platform-code-test-app -n default
+    set -e
+}
+
+main "$@"

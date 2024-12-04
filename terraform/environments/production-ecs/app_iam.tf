@@ -16,6 +16,7 @@ resource "aws_iam_role" "task_role" {
   name                  = var.app_name
   assume_role_policy    = data.aws_iam_policy_document.assume_role_policy.json
   force_detach_policies = true
+  permissions_boundary = data.aws_iam_policy.candidate_permissions_boundary.arn
 }
 
 resource "aws_iam_role_policy_attachment" "task_role_execution_policy_attachment" {

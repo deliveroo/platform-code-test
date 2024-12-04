@@ -34,8 +34,9 @@ data "aws_iam_policy_document" "fargate_execution_role_assume_role_policy" {
 }
 
 resource "aws_iam_role" "fargate_execution_role" {
-  name               = "eks-fargate-${aws_eks_cluster.apps.name}-default"
-  assume_role_policy = data.aws_iam_policy_document.fargate_execution_role_assume_role_policy.json
+  name                 = "eks-fargate-${aws_eks_cluster.apps.name}-default"
+  assume_role_policy   = data.aws_iam_policy_document.fargate_execution_role_assume_role_policy.json
+  permissions_boundary = data.aws_iam_policy.candidate_permissions_boundary.arn
 }
 
 resource "aws_iam_role_policy_attachment" "eks_apps_cni_fargate_policy" {

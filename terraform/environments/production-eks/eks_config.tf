@@ -76,8 +76,9 @@ data "aws_iam_policy_document" "eks_load_balancer_assume_role" {
 }
 
 resource "aws_iam_role" "eks_load_balancer" {
-  name               = "eks-apps-load-balancer"
-  assume_role_policy = data.aws_iam_policy_document.eks_load_balancer_assume_role.json
+  name                 = "eks-apps-load-balancer"
+  assume_role_policy   = data.aws_iam_policy_document.eks_load_balancer_assume_role.json
+  permissions_boundary = data.aws_iam_policy.candidate_permissions_boundary.arn
 }
 
 resource "aws_iam_policy" "eks_load_balancer" {

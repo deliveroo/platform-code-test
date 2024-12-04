@@ -1,5 +1,9 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_iam_policy" "candidate_permissions_boundary" {
+  name = var.permissions_boundary_name
+}
+
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "main_public" {
@@ -24,12 +28,18 @@ variable "app_name" {
 
 variable "app_image" {
   type    = string
-  default = "569418866894.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.2"
+  default = "443370673249.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
 }
 
 variable "dns_public_domain" {
   type    = string
-  default = "roo-plat-coding-test.co.uk"
+  default = "roo-sandbox-plat-coding-test.co.uk"
+}
+
+variable "permissions_boundary_name" {
+  description = "Perms boundary policy name for IAM users"
+  default     = "prod-plat-recruitment-candidate-permissions-boundary"
+  type        = string
 }
 
 variable "region" {

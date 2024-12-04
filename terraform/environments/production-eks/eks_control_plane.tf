@@ -67,8 +67,9 @@ data "aws_iam_policy_document" "eks_assume_role" {
 }
 
 resource "aws_iam_role" "eks_apps" {
-  name               = "eks-apps-control-plane"
-  assume_role_policy = data.aws_iam_policy_document.eks_assume_role.json
+  name                 = "eks-apps-control-plane"
+  assume_role_policy   = data.aws_iam_policy_document.eks_assume_role.json
+  permissions_boundary = data.aws_iam_policy.candidate_permissions_boundary.arn
 }
 
 resource "aws_iam_role_policy_attachment" "eks_apps_cluster_policy" {
