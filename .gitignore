@@ -1,5 +1,7 @@
 .creds
 .terraform
 terraform.tfstate*
+*.tfstate
 *.log
 .env
+.terraform.lock.hcl

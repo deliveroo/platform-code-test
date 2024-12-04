@@ -13,6 +13,7 @@ resource "aws_iam_role" "kubernetes_cluster_admin" {
       }
     ]
   })
+  permissions_boundary = data.aws_iam_policy.candidate_permissions_boundary.arn
 }
 
 resource "aws_iam_policy" "kubernetes_cluster_admin" {
