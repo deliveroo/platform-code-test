@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine as builder
+FROM golang:1.23-alpine as builder
 
 ARG DIR=${GOPATH}/src/deliveroo/platform-code-test-app
 RUN mkdir -p ${DIR}
@@ -7,7 +7,7 @@ WORKDIR ${DIR}
 RUN go build -o /app
 
 
-FROM alpine:3.16 as production
+FROM alpine:3.21 as production
 
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app /app

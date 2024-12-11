@@ -1,5 +1,10 @@
 data "aws_caller_identity" "current" {}
 
+data "aws_ecr_image" "app_image" {
+  repository_name = var.app_name
+  image_tag       = "latest"
+}
+
 data "aws_iam_policy" "candidate_permissions_boundary" {
   name = var.permissions_boundary_name
 }
@@ -24,11 +29,6 @@ variable "app_rds_master_username" {
 variable "app_name" {
   type    = string
   default = "platform-code-test-app"
-}
-
-variable "app_image" {
-  type    = string
-  default = "443370673249.dkr.ecr.eu-west-1.amazonaws.com/platform-code-test-app:0.0.1"
 }
 
 variable "dns_public_domain" {
