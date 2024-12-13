@@ -23,7 +23,7 @@ resource "kubernetes_deployment" "app" {
 
       spec {
         container {
-          image = var.app_image
+          image = data.aws_ecr_image.app_image.image_uri
           name  = "app"
 
           resources {

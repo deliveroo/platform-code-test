@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "test_app" {
     {
       command   = ["/app"]
       name      = "app"
-      image     = var.app_image
+      image     = data.aws_ecr_image.app_image.image_uri
       cpu       = 256
       memory    = 512
       essential = true

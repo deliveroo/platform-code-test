@@ -4,7 +4,7 @@ PWD=$(shell pwd)
 
 SERVICE_NAME?=platform-code-test-app
 
-DOCKER_PUSH_APP_VERSION?=0.0.1
+DOCKER_PUSH_APP_VERSION?=latest
 DOCKER_PUSH_AWS_ACCOUNT?=443370673249
 DOCKER_PUSH_AWS_REGION?=eu-west-1
 
@@ -48,8 +48,8 @@ docker_push_aws:
 	$(MAKE) docker_build DOCKER_BUILD_PLATFORM=linux/amd64 DOCKER_BUILD_TAG=${DOCKER_BUILD_TAG}-aws
 	aws ecr get-login-password --region ${DOCKER_PUSH_AWS_REGION} | \
 		docker login --username AWS --password-stdin ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com
-	docker tag $(shell docker images -q  '${DOCKER_BUILD_TAG}-aws') ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${DOCKER_PUSH_APP_VERSION}
-	docker push ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${DOCKER_PUSH_APP_VERSION}
+	docker tag $(shell docker images -q  '${DOCKER_BUILD_TAG}-aws') ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}
+	docker push ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com/${SERVICE_NAME}
 
 .PHONY: docker_run
 docker_run: docker_build
