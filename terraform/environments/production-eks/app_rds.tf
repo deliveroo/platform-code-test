@@ -53,7 +53,7 @@ resource "aws_rds_cluster" "test_app" {
   db_subnet_group_name    = aws_db_subnet_group.test_app.name
   engine                  = "aurora-postgresql"
   engine_mode             = "provisioned"
-  engine_version          = "15.2"
+  engine_version          = "15"
   database_name           = "main"
   master_password         = random_id.test_app_rds_master_password.b64_url
   master_username         = var.app_rds_master_username
