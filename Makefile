@@ -2,21 +2,8 @@ PATH:= $(PATH):$(GOBIN)
 export PATH
 SHELL:= env PATH=$(PATH) /bin/bash
 
-INTERVIEW_TYPE?=$(shell grep -v '^\#' INTERVIEW_TYPE | awk '{print $$1}' | grep -v '^$$' | head -n 1)
-
 AWS_ACCOUNT?=443370673249
-ENV?=production-$(INTERVIEW_TYPE)
-
-
-export INTERVIEW_TYPE
-
-.PHONY: .check-interview-type
-.check-interview-type:
-	@[ -d terraform/environments/$(ENV) ] || (echo "Could not find Terraform directory, is INTERVIEW_TYPE file updated?" >&2 && exit 1)
-
-.PHONY: eks-config
-eks-config:
-	aws eks update-kubeconfig --name apps --region eu-west-1 --role-arn arn:aws:iam::$(AWS_ACCOUNT):role/kubernetes-cluster-admin
+ENV?=production
 
 .PHONY: tf-apply
 tf-apply: tf-init
@@ -29,18 +16,25 @@ tf-clean:
 	find . -type f -a -name ".terraform.lock.hcl" -print0 | xargs -0 rm -rf
 
 .PHONY: tf-destroy
-tf-destroy: tf-init
-	./bin/eks_destroy $(INTERVIEW_TYPE)
+tf-destroy: tf-init .k8s-destroy
 	cd terraform/environments/$(ENV) && terraform destroy -auto-approve
 
 .PHONY: tf-fmt
-tf-fmt: .check-interview-type
+tf-fmt:
 	cd terraform/environments/$(ENV) && terraform fmt -recursive
 
 .PHONY: tf-init
-tf-init: .check-interview-type
+tf-init:
 	cd terraform/environments/$(ENV) && terraform init
 
 .PHONY: tf-plan
 tf-plan: tf-init
 	cd terraform/environments/$(ENV) && terraform plan
+
+.PHONY: k8s-config
+k8s-config:
+	aws eks update-kubeconfig --name apps --region eu-west-1 --role-arn arn:aws:iam::$(AWS_ACCOUNT):role/kubernetes-cluster-admin
+
+.PHONY: .k8s-destroy
+.k8s-destroy: k8s-config
+	kubectl delete ingress platform-code-test-app -n default
