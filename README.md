@@ -11,7 +11,6 @@ A live coding to test for potential platform engineers.
 ### Setup
 
 * Add credentials to [.aws_creds](/.aws_creds) and source in your shell environment
-* Update the [INTERVIEW_TYPE](./INTERVIEW_TYPE) file to reflect the flavour of interview (ECS or EKS), by removing the comment on the relevant line
 
 ### Makefile
 
