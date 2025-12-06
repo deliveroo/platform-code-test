@@ -7,7 +7,7 @@ WORKDIR ${DIR}
 RUN go build -o /app
 
 
-FROM alpine:3.21 as production
+FROM alpine:3.23 as production
 
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app /app
