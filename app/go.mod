@@ -3,7 +3,7 @@ module github.com/deliveroo/platform-code-test-app
 go 1.23
 
 require (
-	github.com/caarlos0/env/v6 v6.3.0
+	github.com/caarlos0/env/v11 v11.3.1
 	github.com/lib/pq v1.10.9
 	github.com/mash/go-accesslog v1.2.0
 	github.com/rs/zerolog v1.20.0
