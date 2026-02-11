@@ -1,6 +1,6 @@
 module github.com/deliveroo/platform-code-test-app
 
-go 1.23
+go 1.26
 
 require (
 	github.com/caarlos0/env/v6 v6.3.0

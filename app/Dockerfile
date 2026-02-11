@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine as builder
+FROM golang:1.26-alpine as builder
 
 ARG DIR=${GOPATH}/src/deliveroo/platform-code-test-app
 RUN mkdir -p ${DIR}
