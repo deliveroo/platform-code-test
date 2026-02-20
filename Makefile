@@ -3,11 +3,10 @@ export PATH
 SHELL:= env PATH=$(PATH) /bin/bash
 
 AWS_ACCOUNT ?= $(shell aws sts get-caller-identity --query "Account" --output text)
-ENV ?= production
 
 .PHONY: tf-apply
 tf-apply: tf-init
-	cd terraform/environments/$(ENV) && terraform apply -auto-approve
+	cd terraform/ && terraform apply -auto-approve
 
 .PHONY: tf-clean
 tf-clean:
@@ -17,19 +16,19 @@ tf-clean:
 
 .PHONY: tf-destroy
 tf-destroy: tf-init .k8s-destroy
-	cd terraform/environments/$(ENV) && terraform destroy -auto-approve
+	cd terraform/ && terraform destroy -auto-approve
 
 .PHONY: tf-fmt
 tf-fmt:
-	cd terraform/environments/$(ENV) && terraform fmt -recursive
+	cd terraform/ && terraform fmt -recursive
 
 .PHONY: tf-init
 tf-init: .pre-validate
-	cd terraform/environments/$(ENV) && terraform init
+	cd terraform/ && terraform init
 
 .PHONY: tf-plan
 tf-plan: tf-init
-	cd terraform/environments/$(ENV) && terraform plan
+	cd terraform/ && terraform plan
 
 .PHONY: k8s-config
 k8s-config: .pre-validate
