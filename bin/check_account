@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# This script checks if the provided account ID is allowlisted in the .aws_account_ids file.
+# This prevents candidates & interviewers from accidentally provisioning infrastructure in the wrong account.
+
+ACCOUNT_ID="${1}"
+
+if [[ -z "${ACCOUNT_ID}" ]]; then
+    echo 'Account ID is not set!' >&2
+    exit 1
+fi
+
+if ! grep -Fqx "${ACCOUNT_ID}" .aws_account_ids; then
+    echo "Account ID '${ACCOUNT_ID}' is not allowlisted!" >&2
+    exit 1
+fi

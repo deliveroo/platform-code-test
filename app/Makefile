@@ -5,7 +5,7 @@ PWD=$(shell pwd)
 SERVICE_NAME?=platform-code-test-app
 
 DOCKER_PUSH_APP_VERSION?=latest
-DOCKER_PUSH_AWS_ACCOUNT?=443370673249
+DOCKER_PUSH_AWS_ACCOUNT?=$(shell aws sts get-caller-identity --query "Account" --output text)
 DOCKER_PUSH_AWS_REGION?=eu-west-1
 
 DOCKER_BUILD_PLATFORM?=
@@ -44,7 +44,7 @@ docker_build:
 		.
 
 .PHONY: docker_push_aws
-docker_push_aws:
+docker_push_aws: .pre-validate
 	$(MAKE) docker_build DOCKER_BUILD_PLATFORM=linux/amd64 DOCKER_BUILD_TAG=${DOCKER_BUILD_TAG}-aws
 	aws ecr get-login-password --region ${DOCKER_PUSH_AWS_REGION} | \
 		docker login --username AWS --password-stdin ${DOCKER_PUSH_AWS_ACCOUNT}.dkr.ecr.${DOCKER_PUSH_AWS_REGION}.amazonaws.com
@@ -78,3 +78,7 @@ test_all: deps test_unit
 .PHONY: test_unit
 test_unit:
 	go test -count 1 -timeout=30s -cover -race -v ./...
+
+.PHONY: .pre-validate
+.pre-validate:
+	@../bin/check_account "$(DOCKER_PUSH_AWS_ACCOUNT)"

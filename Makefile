@@ -2,8 +2,8 @@ PATH:= $(PATH):$(GOBIN)
 export PATH
 SHELL:= env PATH=$(PATH) /bin/bash
 
-AWS_ACCOUNT?=443370673249
-ENV?=production
+AWS_ACCOUNT ?= $(shell aws sts get-caller-identity --query "Account" --output text)
+ENV ?= production
 
 .PHONY: tf-apply
 tf-apply: tf-init
@@ -24,7 +24,7 @@ tf-fmt:
 	cd terraform/environments/$(ENV) && terraform fmt -recursive
 
 .PHONY: tf-init
-tf-init:
+tf-init: .pre-validate
 	cd terraform/environments/$(ENV) && terraform init
 
 .PHONY: tf-plan
@@ -32,9 +32,13 @@ tf-plan: tf-init
 	cd terraform/environments/$(ENV) && terraform plan
 
 .PHONY: k8s-config
-k8s-config:
+k8s-config: .pre-validate
 	aws eks update-kubeconfig --name apps --region eu-west-1 --role-arn arn:aws:iam::$(AWS_ACCOUNT):role/kubernetes-cluster-admin
 
 .PHONY: .k8s-destroy
 .k8s-destroy: k8s-config
 	kubectl delete ingress platform-code-test-app -n default
+
+.PHONY: .pre-validate
+.pre-validate:
+	@bin/check_account "$(AWS_ACCOUNT)"
