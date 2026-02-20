@@ -1,5 +1,5 @@
 resource "aws_route53_record" "test_app_public" {
-  name    = "${var.app_name}.${var.dns_public_domain}"
+  name    = "${var.app_name}.${local.dns_public_domain}"
   type    = "CNAME"
   zone_id = data.aws_route53_zone.main_public.zone_id
   ttl     = 60

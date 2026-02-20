@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "fargate_execution_role_assume_role_policy" {
       test     = "ArnLike"
       variable = "aws:SourceArn"
       values = [
-        "arn:aws:eks:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:fargateprofile/${aws_eks_cluster.apps.name}/default/*"
+        "arn:aws:eks:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:fargateprofile/${aws_eks_cluster.apps.name}/default/*"
       ]
     }
 
