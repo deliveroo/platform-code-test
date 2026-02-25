@@ -1,3 +1,7 @@
+locals {
+  dns_public_domain = data.aws_route53_zone.main_public.name
+}
+
 data "aws_caller_identity" "current" {}
 
 data "aws_ecr_image" "app_image" {
@@ -13,7 +17,6 @@ data "aws_iam_policy" "candidate_permissions_boundary" {
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "main_public" {
-  name         = var.dns_public_domain
   private_zone = false
   tags = {
     Env  = "prod"
@@ -30,11 +33,6 @@ variable "app_rds_master_username" {
 variable "app_name" {
   type    = string
   default = "platform-code-test-app"
-}
-
-variable "dns_public_domain" {
-  type    = string
-  default = "roo-sandbox-plat-coding-test.co.uk"
 }
 
 variable "permissions_boundary_name" {
