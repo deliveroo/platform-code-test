@@ -19,7 +19,6 @@ data "aws_region" "current" {}
 data "aws_route53_zone" "main_public" {
   private_zone = false
   tags = {
-    Env  = "prod"
     Name = "main"
   }
 }
