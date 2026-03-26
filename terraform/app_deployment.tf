@@ -7,7 +7,7 @@ resource "helm_release" "app" {
   chart = "${path.module}/../charts/platform-code-test-app"
 
   set {
-    name  = "nameOverride"
+    name  = "name"
     value = var.app_name
   }
 

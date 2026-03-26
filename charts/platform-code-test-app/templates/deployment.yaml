@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "platform-code-test-app.name" . }}
+  name: {{ .Values.name }}
   labels:
-    app: {{ include "platform-code-test-app.name" . }}
+    app: {{ .Values.name }}
 spec:
   selector:
     matchLabels:
-      app: {{ include "platform-code-test-app.name" . }}
+      app: {{ .Values.name }}
   template:
     metadata:
       labels:
-        app: {{ include "platform-code-test-app.name" . }}
+        app: {{ .Values.name }}
     spec:
       containers:
         - name: app
