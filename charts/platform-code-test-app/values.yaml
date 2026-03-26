@@ -1,0 +1,23 @@
+image:
+  repository: ""
+
+name: ""
+
+resources:
+  limits:
+    cpu: "0.5"
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+ingress:
+  subnets: ""
+  certificateArn: ""
+  securityGroupId: ""
+
+db:
+  host: ""
+  user: ""
+  # Name of a Kubernetes Secret containing a DB_PASSWORD key
+  existingSecret: ""
