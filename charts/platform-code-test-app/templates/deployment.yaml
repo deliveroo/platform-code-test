@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "platform-code-test-app.name" . }}
+  labels:
+    app: {{ include "platform-code-test-app.name" . }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ include "platform-code-test-app.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "platform-code-test-app.name" . }}
+    spec:
+      containers:
+        - name: app
+          image: {{ .Values.image.repository }}
+          resources:
+            limits:
+              cpu: {{ .Values.resources.limits.cpu | quote }}
+              memory: {{ .Values.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.resources.requests.cpu }}
+              memory: {{ .Values.resources.requests.memory }}
+          {{- if or .Values.db.host .Values.db.existingSecret }}
+          env:
+            {{- if .Values.db.host }}
+            - name: DB_HOST
+              value: {{ .Values.db.host | quote }}
+            {{- end }}
+            {{- if .Values.db.user }}
+            - name: DB_USER
+              value: {{ .Values.db.user | quote }}
+            {{- end }}
+            {{- if .Values.db.existingSecret }}
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.db.existingSecret }}
+                  key: DB_PASSWORD
+            {{- end }}
+          {{- end }}
