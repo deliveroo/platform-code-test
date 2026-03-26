@@ -10,11 +10,14 @@ provider "aws" {
 }
 
 # Kubernetes admin AWS provider, only use this for k8s provider.
-# assume_role is omitted — interviewers always take the @deliveroo.co.uk
-# bootstrap path. Candidates are given credentials with a direct EKS access entry.
 provider "aws" {
   region = var.region
   alias  = "kubernetes_admin"
+
+  assume_role {
+    role_arn     = aws_eks_access_entry.cluster_admin.principal_arn
+    session_name = "Terraform"
+  }
 }
 
 data "aws_eks_cluster" "this" {
