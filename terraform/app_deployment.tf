@@ -1,43 +1,23 @@
-resource "kubernetes_deployment" "app" {
+resource "helm_release" "app" {
   depends_on = [
     aws_eks_fargate_profile.apps_default,
+    helm_release.aws_load_balancer_controller,
   ]
 
-  metadata {
-    name = var.app_name
-  }
+  name  = var.app_name
+  chart = "${path.module}/../charts/platform-code-test-app"
 
-  spec {
-    selector {
-      match_labels = {
-        app = var.app_name
+  values = [
+    yamlencode({
+      name = var.app_name
+      image = {
+        repository = data.aws_ecr_image.app_image.image_uri
       }
-    }
-
-    template {
-      metadata {
-        labels = {
-          app = var.app_name
-        }
+      ingress = {
+        subnets         = join(",", [aws_subnet.subnet_public_a.id, aws_subnet.subnet_public_b.id])
+        certificateArn  = aws_acm_certificate.main_public.arn
+        securityGroupId = aws_security_group.test_app_alb_public.id
       }
-
-      spec {
-        container {
-          image = data.aws_ecr_image.app_image.image_uri
-          name  = "app"
-
-          resources {
-            limits = {
-              cpu    = "0.5"
-              memory = "512Mi"
-            }
-            requests = {
-              cpu    = "250m"
-              memory = "512Mi"
-            }
-          }
-        }
-      }
-    }
-  }
+    })
+  ]
 }
