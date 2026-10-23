@@ -1,6 +1,6 @@
 # platform-code-test
 
-A live coding to test for potential platform engineers.
+A live coding test for potential platform engineers.
 
 ## Usage
 
